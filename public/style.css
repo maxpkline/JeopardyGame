@@ -1,0 +1,277 @@
+@font-face {
+    font-family: "Jeopardy Font";
+    src: url("fonts/gyparody hv.ttf");
+}
+
+@font-face {
+    font-family: "Categories Dollar Amounts";
+    src: url("fonts/Swiss 911 Ultra Compressed BT.ttf");
+}
+
+@font-face {
+    font-family: "Clue Font";
+    src: url("fonts/ITC_ Korinna Bold.ttf");
+}
+
+:root {
+    font-family: "Categories Dollar Amounts", serif;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #000000;
+    text-align: center;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Categories Dollar Amounts", serif;
+}
+
+body {
+    /*background: radial-gradient(circle, #8a9bd1, #052a47);*/
+    background-image: url("ripple-blue-img.png");
+    display: flex;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 90vw;
+    max-width: 100%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    border: 5px solid #000000;
+    background-color: #000000;
+}
+
+#start-menu {
+    width: 75vw;
+    max-width: 100%;
+    height: 75vh;
+    font-weight: 1;
+    font-size: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #060CE9;
+    background-image: url("galaxytypeimage.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 50px;
+    border: #161d47 8px solid;
+}
+
+#start-screen-title {
+    margin-top: 5%;
+    font-family: "Jeopardy Font", serif;
+    font-weight: 1;
+    font-size: 7rem;
+}
+
+#start-button {
+    width: 20%;
+    height: 10%;
+    font-size: x-large;
+    border: 5px solid #010a77;
+    color: #ffffff;
+    background-color: #010a77;
+    border-radius: 20px;
+}
+
+#start-button:hover {
+    background-color: #7fb9dd;
+    border: 5px solid #7fb9dd;
+    color: #ffffff;
+}
+
+.category-selection {
+    width: 80%; /* Ensure it takes the full width */
+    max-height: 60%;
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    margin: 20px;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 20px; /* Add padding to the grid container */
+    border: 5px solid #161d47; /* Border around the checkbox grid */
+    background-color: rgba(194, 204, 230, 0.5);
+    border-radius: 15px; /* Rounded corners */
+}
+
+.category-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #010a77; /* Background color for the checkboxes */
+    border-radius: 10px; /* Rounded corners for each checkbox */
+    color: white; /* Text color */
+    font-size: large;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    cursor: pointer; /* Pointer cursor */
+    box-shadow: black 5px 5px 10px; /* Add a subtle shadow for a nice effect */
+}
+
+.category-checkbox input {
+    margin-right: 10px; /* Space between checkbox and label text */
+}
+
+.category-checkbox:hover {
+    background-color: #0073e6; /* Change background on hover */
+}
+
+.category-selection-title {
+    justify-content: flex-start;
+}
+
+.category-title {
+    font-size: 24px; /* Adjust the font size as needed */
+    margin-bottom: 10px;
+    font-weight: normal;
+    color: white; /* Text color */
+    text-align: center; /* Center the text */
+}
+
+.container {
+    text-align: center;
+    font-weight: 1;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.title-container {
+    display: flex; /* Use flexbox for horizontal alignment */
+    width: 100%;
+    justify-content: space-between; /* Space them out with one on the left and one on the right */
+    align-items: center; /* Vertically align them in the center */
+    letter-spacing: 3px;
+    height: 100px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #0073e6, #003399);
+}
+
+.game-title {
+    font-size: 3.5rem;
+    text-shadow: black 4px 4px 4px;
+    font-weight: 599;
+    margin: 0; /* Remove any extra margins */
+}
+
+#score-display {
+    font-size: 2.5rem;
+    text-shadow: black 4px 4px 4px;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 15px;
+    background-image: url("jeopardyDollars2.PNG");
+    background-size: contain;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5vw;
+    height: 80%;
+    width: 100%;
+}
+
+.category {
+    font-size: 2.5vw;
+    letter-spacing: 0.05em;
+    text-shadow: black 4px 4px 4px;
+    padding: 1vw;
+    background: linear-gradient(to bottom, #003399, #0073e6);
+    align-content: center;
+    border-radius: 15px;
+}
+
+.clue-group {
+    display: flex;
+    flex-direction: column;
+    grid-row-gap: 2%;
+    height: 100%;
+}
+
+.clue {
+    font-size: 2.5vw;
+    text-shadow: black 4px 4px 4px;
+    padding: 1vw;
+    letter-spacing: 0.02em;
+    background-color: #010a77;
+    border-radius: 15px;
+    transition: background-color 0.3s;
+    flex: 1; /* Allows clues to scale dynamically within each column */
+}
+
+.clue:hover {
+    background-color: #0073e6;
+    /*font-size: 2.6vw;*/
+    /*border: #b3ac25 8px ridge;*/
+}
+
+.question-modal {
+    opacity: 0;
+    visibility: hidden; /* Hidden by default */
+    transition: opacity 0.5s ease, visibility 0s linear 0.5s; /* Fade animation */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Clue Font", serif;
+    font-size: 3rem;
+    padding: 20px;
+    background-color: #010a77;
+    border-radius: 8px;
+    z-index: 1000;
+    width: 50%;
+    border: #000000 8px solid;
+    text-shadow: black 4px 4px 4px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Visible state for modal (applies when the modal should be shown) */
+.question-modal.show {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+#answer-input {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #bdc3c7;
+    width:75%;
+}
+
+#submit-answer {
+    margin-top: 8px;
+    padding: 10px 5px;
+    font-size: 2rem;
+    border: none;
+    background-color: #2ecc71;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 20%;
+}
+
+#feedback {
+    margin-top: 10px;
+    color: #e74c3c;
+}

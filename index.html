@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeopardy!</title>
+  <link rel="stylesheet" href="public/style.css">
+</head>
+
+<body>
+
+<!-- Start Menu Screen -->
+<div class="container" id="start-menu">
+  <h1 id="start-screen-title">Jeopardy!</h1>
+
+  <!-- Category Selection -->
+  <div class="category-selection">
+    <h2 class="category-title">Select Categories</h2>
+    <div class="category-grid">
+      <label class="category-checkbox">
+        <input type="checkbox" id="science" name="category-selection" value="Science">
+        <span>Science</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="history" name="category-selection" value="History">
+        <span>History</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="movies" name="category-selection" value="Movies">
+        <span>Movies</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="sports" name="category-selection" value="Sports">
+        <span>Sports</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="geography" name="category-selection" value="Geography">
+        <span>Geography</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="psychology" name="category-selection" value="Psychology">
+        <span>Psychology</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="computers" name="category-selection" value="Computers">
+        <span>Computers</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="botany" name="category-selection" value="Botany">
+        <span>Botany</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="oceans" name="category-selection" value="Oceans">
+        <span>Oceans</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="videogames" name="category-selection" value="Video Games">
+        <span>Video Games</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="quotes" name="category-selection" value="Quotes">
+        <span>Quotes</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="history2" name="category-selection" value="History">
+        <span>History</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="movies2" name="category-selection" value="Movies">
+        <span>Movies</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="sports2" name="category-selection" value="Sports">
+        <span>Sports</span>
+      </label>
+      <label class="category-checkbox">
+        <input type="checkbox" id="geography2" name="category-selection" value="Geography">
+        <span>Geography</span>
+      </label>
+    </div>
+  </div>
+
+  <button id="start-button" onclick="startGame()">Start Game</button>
+</div>
+
+<!-- Single-Player Round Screen -->
+<div class="container" id="single-round" style="display: none;">
+  <div class ="game-container">
+  <div class="title-container">
+  <h1 class="game-title">Jeopardy Trivia Game</h1>
+    <p id="score-display">Score: 0</p>
+  </div>
+  <div class="board">
+    <!-- Categories -->
+    <div class="category">Science</div>
+    <div class="category">History</div>
+    <div class="category">Movies</div>
+    <div class="category">Sports</div>
+    <div class="category">Geography</div>
+
+    <!-- Clue buttons grouped by categories -->
+    <div class="clue-group">
+      <div class="clue">100</div>
+      <div class="clue">200</div>
+      <div class="clue">300</div>
+      <div class="clue">400</div>
+      <div class="clue">500</div>
+    </div>
+    <div class="clue-group">
+      <div class="clue">100</div>
+      <div class="clue">200</div>
+      <div class="clue">300</div>
+      <div class="clue">400</div>
+      <div class="clue">500</div>
+    </div>
+    <div class="clue-group">
+      <div class="clue">100</div>
+      <div class="clue">200</div>
+      <div class="clue">300</div>
+      <div class="clue">400</div>
+      <div class="clue">500</div>
+    </div>
+    <div class="clue-group">
+      <div class="clue">100</div>
+      <div class="clue">200</div>
+      <div class="clue">300</div>
+      <div class="clue">400</div>
+      <div class="clue">500</div>
+    </div>
+    <div class="clue-group">
+      <div class="clue">100</div>
+      <div class="clue">200</div>
+      <div class="clue">300</div>
+      <div class="clue">400</div>
+      <div class="clue">500</div>
+    </div>
+  </div>
+
+  <div class="question-modal">
+    <p id="question-text"></p>
+    <input type="text" id="answer-input" placeholder="Type your answer">
+    <button id="submit-answer">Submit</button>
+    <p id="feedback"></p>
+  </div>
+  </div>
+</div>
+
+<!-- Double Jeopardy Round Screen -->
+<div class="container" id="double-round" style="display: none;">
+  <div class="game-container">
+    <div class="title-container">
+      <h1 class="game-title">Jeopardy Trivia Game - Double Jeopardy</h1>
+      <p class="score-display">Score: 0</p>
+    </div>
+    <div class="board">
+      <!-- Categories and Clues, but with double point values for this round -->
+      <!-- Categories -->
+      <div class="category">Science</div>
+      <div class="category">History</div>
+      <div class="category">Movies</div>
+      <div class="category">Sports</div>
+      <div class="category">Geography</div>
+
+      <!-- Clue buttons grouped by categories -->
+      <div class="clue-group">
+        <div class="clue">100</div>
+        <div class="clue">200</div>
+        <div class="clue">300</div>
+        <div class="clue">400</div>
+        <div class="clue">500</div>
+      </div>
+      <div class="clue-group">
+        <div class="clue">100</div>
+        <div class="clue">200</div>
+        <div class="clue">300</div>
+        <div class="clue">400</div>
+        <div class="clue">500</div>
+      </div>
+      <div class="clue-group">
+        <div class="clue">100</div>
+        <div class="clue">200</div>
+        <div class="clue">300</div>
+        <div class="clue">400</div>
+        <div class="clue">500</div>
+      </div>
+      <div class="clue-group">
+        <div class="clue">100</div>
+        <div class="clue">200</div>
+        <div class="clue">300</div>
+        <div class="clue">400</div>
+        <div class="clue">500</div>
+      </div>
+      <div class="clue-group">
+        <div class="clue">100</div>
+        <div class="clue">200</div>
+        <div class="clue">300</div>
+        <div class="clue">400</div>
+        <div class="clue">500</div>
+      </div>
+    </div>
+    <div class="question-modal">
+      <p class="question-text"></p>
+      <input type="text" class="answer-input" placeholder="Type your answer">
+      <button class="submit-answer">Submit</button>
+      <p class="feedback"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Final Score Screen -->
+<div class="container" id="final-screen" style="display: none;">
+  <h1>Game Over!</h1>
+  <p id="final-score-display">Your Total Score: 0</p>
+  <button onclick="restartGame()">Play Again</button>
+</div>
+
+<script src="src/main.js"></script>
+</body>
+</html>
