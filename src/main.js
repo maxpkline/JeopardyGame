@@ -94,8 +94,24 @@ fetch('src/questions.json')
 function setupGameBoard(data, roundMultiplier) {
   const allCategories = Object.keys(data);
   let selectedCategories = getSelectedCategories(allCategories);
-  const categoryElements = document.querySelectorAll('.category');
-  const clueElements = document.querySelectorAll('.clue');
+  const currentRoundSelector = round === 1 ? '#single-round' : '#double-round';
+  const categoryElements = document.querySelector(currentRoundSelector).querySelectorAll('.category');
+  const clueElements = document.querySelector(currentRoundSelector).querySelectorAll('.clue');
+
+  // Get the correct modal elements based on current round
+  const questionModal = document.querySelector(`${currentRoundSelector} .question-modal`);
+  const questionText = round === 1 ?
+      document.getElementById('question-text') :
+      document.querySelector(`${currentRoundSelector} .question-text`);
+  const answerInput = round === 1 ?
+      document.getElementById('answer-input') :
+      document.querySelector(`${currentRoundSelector} .answer-input`);
+  const submitAnswer = round === 1 ?
+      document.getElementById('submit-answer') :
+      document.querySelector(`${currentRoundSelector} .submit-answer`);
+  const feedback = round === 1 ?
+      document.getElementById('feedback') :
+      document.querySelector(`${currentRoundSelector} .feedback`);
 
   selectedCategories.forEach((categoryName, categoryIndex) => {
     const questions = data[categoryName];
@@ -113,16 +129,32 @@ function setupGameBoard(data, roundMultiplier) {
       clue.setAttribute('data-question', question.question);
       clue.setAttribute('data-answer', question.answer.toLowerCase());
       clue.textContent = question.value * roundMultiplier;
-      console.log(round, roundMultiplier);
     });
   });
 
+  // Function to show modal with fade-in effect
+  const showModal = () => {
+    questionModal.classList.add('show');
+  };
+
+  // Function to hide modal with fade-out effect
+  const hideModal = () => {
+    questionModal.classList.remove('show');
+  };
+
   // Function to handle answer submission
   const handleSubmission = (clue, pointValue) => {
-    const playerAnswer = answerInput.value.toLowerCase();
-    const correctAnswer = clue.getAttribute('data-answer');
+    const playerAnswer = answerInput.value.toLowerCase().trim();
+    const correctAnswer = clue.getAttribute('data-answer').toLowerCase().trim();
 
-    if (playerAnswer === correctAnswer) {
+// Remove articles and extra spaces from both answers
+    const cleanPlayerAnswer = playerAnswer.replace(/^(a|an|the)\s+/, '').trim();
+    const cleanCorrectAnswer = correctAnswer.replace(/^(a|an|the)\s+/, '').trim();
+
+    const similarity = calculateSimilarity(cleanPlayerAnswer, cleanCorrectAnswer);
+    const similarityThreshold = 90; // Adjust this value to make it more or less strict
+
+    if (similarity >= similarityThreshold) {
       feedback.textContent = 'Correct!';
       feedback.style.color = 'green';
       clue.style.backgroundColor = 'green';
@@ -135,7 +167,6 @@ function setupGameBoard(data, roundMultiplier) {
     }
 
     clue.classList.add('answered');
-    clue.removeEventListener('click', () => {});
     updateScoreDisplay();
 
     setTimeout(() => {
@@ -151,7 +182,7 @@ function setupGameBoard(data, roundMultiplier) {
     }, 2000);
   };
 
-  document.querySelectorAll('.clue').forEach(clue => {
+  clueElements.forEach(clue => {
     clue.addEventListener('click', () => {
       if (clue.classList.contains('answered')) return;
 
@@ -165,22 +196,54 @@ function setupGameBoard(data, roundMultiplier) {
       const handleEnterKey = (event) => {
         if (event.key === 'Enter') {
           handleSubmission(clue, pointValue);
-          // Remove the event listener after submission
           answerInput.removeEventListener('keypress', handleEnterKey);
         }
       };
 
-      // Add Enter key support
       answerInput.addEventListener('keypress', handleEnterKey);
 
-      // Update submit button click handler
       submitAnswer.onclick = () => {
         handleSubmission(clue, pointValue);
-        // Remove the Enter key event listener when clicking submit
         answerInput.removeEventListener('keypress', handleEnterKey);
       };
     });
   });
+}
+
+// Function to calculate Levenshtein distance between two strings
+function levenshteinDistance(str1, str2) {
+  const m = str1.length;
+  const n = str2.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+  for (let i = 0; i <= m; i++) {
+    dp[i][0] = i;
+  }
+  for (let j = 0; j <= n; j++) {
+    dp[0][j] = j;
+  }
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(
+            dp[i - 1][j - 1] + 1,
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1
+        );
+      }
+    }
+  }
+  return dp[m][n];
+}
+
+// Function to calculate similarity percentage between two strings
+function calculateSimilarity(str1, str2) {
+  const maxLength = Math.max(str1.length, str2.length);
+  const distance = levenshteinDistance(str1, str2);
+  return ((maxLength - distance) / maxLength) * 100;
 }
 
 function allCluesAnswered() {
@@ -199,8 +262,16 @@ function getRandomQuestions(questions, count) {
 
 // Function to update the score display
 function updateScoreDisplay() {
-  const scoreDisplay = document.getElementById('score-display');
-  scoreDisplay.textContent = `Score: ${score}`; // Update score display
+  const singleScoreDisplay = document.getElementById('score-display');
+  const doubleScoreDisplay = document.getElementById('score-display-double');
+
+  // Update both displays if they exist
+  if (singleScoreDisplay) {
+    singleScoreDisplay.textContent = `Score: ${score}`;
+  }
+  if (doubleScoreDisplay) {
+    doubleScoreDisplay.textContent = `Score: ${score}`;
+  }
 }
 
 // DOM elements for the modal and input checking
