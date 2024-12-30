@@ -2,6 +2,7 @@ let triviaData;
 let correctAnswer = ''; // Store the correct answer for the current question
 let score = 0; // Initialize the player's score
 let round = 1;
+let singleJeopardyAnswers = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   updateScoreDisplay();
@@ -57,19 +58,50 @@ function startDoubleJeopardy() {
 }
 
 // Function to end the game and show final score
-function showFinalScore() {
+function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   document.getElementById('double-round').style.display = 'none';
   document.getElementById('final-screen').style.display = 'block';
   document.getElementById('final-score-display').textContent = `Your Total Score: ${score}`;
+
+  const allResults = [...singleJeopardyResults, ...doubleJeopardyResults];
+
+  // Calculate statistics
+  const totalQuestionsAnswered = allResults.length;
+  const correctAnswers = allResults.filter(result => result.isCorrect).length;
+  const totalPointsEarned = allResults.reduce((sum, result) => sum + result.pointsEarned, 0);
+
+  // Group results by category
+  const categoryStats = allResults.reduce((stats, result) => {
+    if (!stats[result.category]) {
+      stats[result.category] = {
+        correct: 0,
+        total: 0,
+        points: 0
+      };
+    }
+    stats[result.category].total++;
+    if (result.isCorrect) {
+      stats[result.category].correct++;
+    }
+    stats[result.category].points += result.pointsEarned;
+    return stats;
+  }, {});
+
+  // Use data to display detailed statistics on final screen
+  console.log('Game Statistics:', {
+    totalQuestionsAnswered,
+    correctAnswers,
+    totalPointsEarned,
+    categoryStats
+  });
 }
 
 // Restart Game
 function restartGame() {
   score = 0;
   round = 1;
-  document.getElementById('final-screen').style.display = 'none';
-  document.getElementById('start-menu').style.display = 'block';
   updateScoreDisplay();
+  location.reload();
 }
 
 // Show the modal with a fade-in effect
@@ -142,19 +174,44 @@ function setupGameBoard(data, roundMultiplier) {
     questionModal.classList.remove('show');
   };
 
+  // Initialize arrays to store detailed answer tracking
+  let singleJeopardyResults = [];
+  let doubleJeopardyResults = [];
+
   // Function to handle answer submission
   const handleSubmission = (clue, pointValue) => {
     const playerAnswer = answerInput.value.toLowerCase().trim();
     const correctAnswer = clue.getAttribute('data-answer').toLowerCase().trim();
+    const category = categoryElements[Math.floor(clue.dataset.index / 5)].textContent;
 
-// Remove articles and extra spaces from both answers
+    // Remove articles and extra spaces from both answers
     const cleanPlayerAnswer = playerAnswer.replace(/^(a|an|the)\s+/, '').trim();
     const cleanCorrectAnswer = correctAnswer.replace(/^(a|an|the)\s+/, '').trim();
 
     const similarity = calculateSimilarity(cleanPlayerAnswer, cleanCorrectAnswer);
-    const similarityThreshold = 90; // Adjust this value to make it more or less strict
+    const similarityThreshold = 75;
+    const isCorrect = similarity >= similarityThreshold;
 
-    if (similarity >= similarityThreshold) {
+    // Create result object for this answer
+    const result = {
+      category: category,
+      question: clue.getAttribute('data-question'),
+      correctAnswer: correctAnswer,
+      playerAnswer: playerAnswer,
+      pointValue: pointValue,
+      isCorrect: isCorrect,
+      pointsEarned: isCorrect ? pointValue : -pointValue
+    };
+
+    // Store the result in the appropriate array
+    if (round === 1) {
+      singleJeopardyResults.push(result);
+      singleJeopardyAnswers.push(result);
+    } else {
+      doubleJeopardyResults.push(result);
+    }
+
+    if (isCorrect) {
       feedback.textContent = 'Correct!';
       feedback.style.color = 'green';
       clue.style.backgroundColor = 'green';
@@ -175,14 +232,18 @@ function setupGameBoard(data, roundMultiplier) {
       hideModal();
 
       if (round === 1 && allCluesAnswered()) {
+        console.log('Single Jeopardy Results:', singleJeopardyResults);
         startDoubleJeopardy();
       } else if (round === 2 && allCluesAnswered()) {
-        showFinalScore();
+        console.log('Double Jeopardy Results:', doubleJeopardyResults);
+        showFinalScore(singleJeopardyAnswers, doubleJeopardyResults);
       }
     }, 2000);
   };
 
-  clueElements.forEach(clue => {
+  // Update clueElements setup to include index
+  clueElements.forEach((clue, index) => {
+    clue.dataset.index = index;  // Add index for category reference
     clue.addEventListener('click', () => {
       if (clue.classList.contains('answered')) return;
 
@@ -192,7 +253,6 @@ function setupGameBoard(data, roundMultiplier) {
       questionText.textContent = question;
       showModal();
 
-      // Add Enter key event listener
       const handleEnterKey = (event) => {
         if (event.key === 'Enter') {
           handleSubmission(clue, pointValue);
