@@ -3,6 +3,7 @@ let correctAnswer = ''; // Store the correct answer for the current question
 let score = 0; // Initialize the player's score
 let round = 1;
 let singleJeopardyAnswers = [];
+let doubleJeopardyAnswers = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   updateScoreDisplay();
@@ -57,11 +58,11 @@ function startDoubleJeopardy() {
   console.log('Double Jeopardy started, round:', round);
 }
 
-// Function to end the game and show final score
+
+// Function to show the final score
 function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   document.getElementById('double-round').style.display = 'none';
   document.getElementById('final-screen').style.display = 'block';
-  document.getElementById('final-score-display').textContent = `Your Total Score: ${score}`;
 
   const allResults = [...singleJeopardyResults, ...doubleJeopardyResults];
 
@@ -69,6 +70,8 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   const totalQuestionsAnswered = allResults.length;
   const correctAnswers = allResults.filter(result => result.isCorrect).length;
   const totalPointsEarned = allResults.reduce((sum, result) => sum + result.pointsEarned, 0);
+
+  document.getElementById('final-score-display').textContent = `Your Total Score: $${totalPointsEarned}`;
 
   // Group results by category
   const categoryStats = allResults.reduce((stats, result) => {
@@ -86,7 +89,6 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
     stats[result.category].points += result.pointsEarned;
     return stats;
   }, {});
-
 
   // Create container for category statistics
   const statsContainer = document.createElement('div');
@@ -147,14 +149,112 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
     existingStats.remove();
   }
 
+  // Append the updated stats container first
   finalScreen.appendChild(statsContainer);
-  // Use data to display detailed statistics on final screen
+
+  // Find existing chart container or create new one
+  let chartContainer = finalScreen.querySelector('.chart-container');
+  const correctAnswersPerCategory = Object.keys(categoryStats).map(cat => categoryStats[cat].correct);
+  chartContainer = createPerformanceChart(categoryStats, correctAnswersPerCategory, chartContainer);
+
+  // Ensure chart container is appended after stats
+  if (chartContainer) {
+    finalScreen.appendChild(chartContainer); // Appending ensures proper placement
+  }
+
+  // Log game statistics
   console.log('Game Statistics:', {
     totalQuestionsAnswered,
     correctAnswers,
     totalPointsEarned,
     categoryStats
   });
+}
+
+// Function to create the final score page performance chart
+function createPerformanceChart(categoryStats, correctAnswers, existingContainer = null) {
+  // Use existing container or create new one
+  const chartContainer = existingContainer || document.createElement('div');
+  if (!existingContainer) {
+    chartContainer.className = 'chart-container';
+    chartContainer.style.width = '80%';
+    chartContainer.style.margin = '20px auto';
+  }
+
+  // Clear any existing content
+  chartContainer.innerHTML = '';
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'statisticsChart';
+  chartContainer.appendChild(canvas);
+
+  const categories = Object.keys(categoryStats);
+  const totalPoints = categories.map(cat => categoryStats[cat].points);
+
+  // Create the chart
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: categories,
+      datasets: [
+        {
+          label: 'Correct Answers',
+          data: correctAnswers,
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Points Earned',
+          data: totalPoints,
+          backgroundColor: 'rgba(255, 159, 64, 0.7)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+          borderWidth: 1,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Number of Correct Answers'
+          }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Points Earned'
+          },
+          grid: {
+            drawOnChartArea: false
+          }
+        }
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: 'Performance by Category',
+          font: {
+            size: 16
+          }
+        },
+        legend: {
+          position: 'top'
+        }
+      }
+    }
+  });
+
+  return chartContainer;
 }
 
 // Restart Game
@@ -278,8 +378,9 @@ function setupGameBoard(data, roundMultiplier) {
       clue.style.backgroundColor = 'green';
       score += pointValue;
     } else {
-      // startDoubleJeopardy();
-      // showFinalScore(singleJeopardyAnswers, doubleJeopardyResults);
+      startDoubleJeopardy();
+      fillTestAnswers();
+      showFinalScore(singleJeopardyAnswers, doubleJeopardyAnswers);
       feedback.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
       feedback.style.color = 'red';
       clue.style.backgroundColor = 'red';
@@ -331,6 +432,43 @@ function setupGameBoard(data, roundMultiplier) {
       };
     });
   });
+}
+
+// helper function for testing
+function fillTestAnswers() {
+  const totalAnswers = 25; // Total number of answers to fill for each round
+  const halfCorrect = Math.floor(totalAnswers / 1);
+
+  // Generate test results for Single Jeopardy
+  singleJeopardyAnswers = [];
+  for (let i = 0; i < totalAnswers; i++) {
+    singleJeopardyAnswers.push({
+      category: `Category ${Math.floor(i / 2) + 1}`,
+      question: `Question ${i + 1}`,
+      correctAnswer: `Answer ${i + 1}`,
+      playerAnswer: i < halfCorrect ? `Answer ${i + 1}` : `Wrong Answer ${i + 1}`,
+      pointValue: 200 * (i + 1),
+      isCorrect: i < halfCorrect,
+      pointsEarned: i < halfCorrect ? 200 * (i + 1) : -(200 * (i + 1))
+    });
+  }
+
+  // Generate test results for Double Jeopardy
+  doubleJeopardyAnswers = [];
+  for (let i = 0; i < totalAnswers; i++) {
+    doubleJeopardyAnswers.push({
+      category: `Category ${Math.floor(i / 2) + 1}`,
+      question: `Question ${i + 1}`,
+      correctAnswer: `Answer ${i + 1}`,
+      playerAnswer: i < halfCorrect ? `Answer ${i + 1}` : `Wrong Answer ${i + 1}`,
+      pointValue: 400 * (i + 1),
+      isCorrect: i < halfCorrect,
+      pointsEarned: i < halfCorrect ? 400 * (i + 1) : -(400 * (i + 1))
+    });
+  }
+
+  console.log('Test Single Jeopardy Answers:', singleJeopardyAnswers);
+  console.log('Test Double Jeopardy Results:', doubleJeopardyAnswers);
 }
 
 // Function to calculate Levenshtein distance between two strings
