@@ -91,6 +91,8 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   }, {});
 
   // Create container for category statistics
+  const overallStatsContainer = document.createElement('div');
+    overallStatsContainer.className = 'category-stats';
   const statsContainer = document.createElement('div');
   statsContainer.className = 'category-stats';
 
@@ -98,8 +100,8 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   const overallStats = document.createElement('div');
   const overallStatsTitle = document.createElement('h2');
   overallStatsTitle.textContent = 'Overall Performance';
-  overallStatsTitle.className = 'category-stat-title';
-  overallStats.className = 'category-stat';
+  overallStatsTitle.className = 'overall-game-stats-title';
+  overallStats.className = 'overall-game-stats';
 
   overallStats.innerHTML = `
     <p>Questions Answered: ${totalQuestionsAnswered}</p>
@@ -107,8 +109,8 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
     <p>Accuracy: ${Math.round((correctAnswers / totalQuestionsAnswered) * 100)}%</p>
     <p>Total Points: ${totalPointsEarned}</p>
   `;
-  statsContainer.appendChild(overallStatsTitle);
-  statsContainer.appendChild(overallStats);
+    overallStatsContainer.appendChild(overallStatsTitle);
+    overallStatsContainer.appendChild(overallStats);
 
   // Adding individual category statistics
   Object.entries(categoryStats).forEach(([category, stats]) => {
@@ -150,6 +152,7 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   }
 
   // Append the updated stats container first
+  finalScreen.appendChild(overallStatsContainer);
   finalScreen.appendChild(statsContainer);
 
   // Find existing chart container or create new one
@@ -436,35 +439,55 @@ function setupGameBoard(data, roundMultiplier) {
 
 // helper function for testing
 function fillTestAnswers() {
-  const totalAnswers = 25; // Total number of answers to fill for each round
-  const halfCorrect = Math.floor(totalAnswers / 1);
+  const singleJeopardyCategories = 5; // Total categories in Single Jeopardy
+  const doubleJeopardyCategories = 5; // Total categories in Double Jeopardy
+  const questionsPerCategory = 5; // Number of questions per category
+  const singleJeopardyPointBase = 200; // Base point value for Single Jeopardy
+  const doubleJeopardyPointBase = 400; // Base point value for Double Jeopardy
 
-  // Generate test results for Single Jeopardy
   singleJeopardyAnswers = [];
-  for (let i = 0; i < totalAnswers; i++) {
-    singleJeopardyAnswers.push({
-      category: `Category ${Math.floor(i / 2) + 1}`,
-      question: `Question ${i + 1}`,
-      correctAnswer: `Answer ${i + 1}`,
-      playerAnswer: i < halfCorrect ? `Answer ${i + 1}` : `Wrong Answer ${i + 1}`,
-      pointValue: 200 * (i + 1),
-      isCorrect: i < halfCorrect,
-      pointsEarned: i < halfCorrect ? 200 * (i + 1) : -(200 * (i + 1))
-    });
+  doubleJeopardyAnswers = [];
+
+  // Helper to generate random correct/incorrect results
+  const generateQuestionData = (categoryName, questionIndex, pointValue) => {
+    const isCorrect = Math.random() < 0.5; // Randomize correct/incorrect answers
+    return {
+      category: categoryName,
+      question: `Question ${questionIndex + 1}`,
+      correctAnswer: `Correct Answer ${questionIndex + 1}`,
+      playerAnswer: isCorrect ? `Correct Answer ${questionIndex + 1}` : `Wrong Answer ${questionIndex + 1}`,
+      pointValue: pointValue,
+      isCorrect: isCorrect,
+      pointsEarned: isCorrect ? pointValue : -pointValue
+    };
+  };
+
+  // Generate Single Jeopardy data
+  for (let categoryIndex = 0; categoryIndex < singleJeopardyCategories; categoryIndex++) {
+    const categoryName = `Single Category ${categoryIndex + 1}`;
+    for (let questionIndex = 0; questionIndex < questionsPerCategory; questionIndex++) {
+      singleJeopardyAnswers.push(
+          generateQuestionData(
+              categoryName,
+              questionIndex,
+              singleJeopardyPointBase * (questionIndex + 1) // Increment points based on the question number
+          )
+      );
+    }
   }
 
-  // Generate test results for Double Jeopardy
-  doubleJeopardyAnswers = [];
-  for (let i = 0; i < totalAnswers; i++) {
-    doubleJeopardyAnswers.push({
-      category: `Category ${Math.floor(i / 2) + 1}`,
-      question: `Question ${i + 1}`,
-      correctAnswer: `Answer ${i + 1}`,
-      playerAnswer: i < halfCorrect ? `Answer ${i + 1}` : `Wrong Answer ${i + 1}`,
-      pointValue: 400 * (i + 1),
-      isCorrect: i < halfCorrect,
-      pointsEarned: i < halfCorrect ? 400 * (i + 1) : -(400 * (i + 1))
-    });
+  // Generate Double Jeopardy data
+  for (let categoryIndex = 0; categoryIndex < doubleJeopardyCategories; categoryIndex++) {
+    const categoryName = `Double Category ${categoryIndex + 1}`;
+    for (let questionIndex = 0; questionIndex < questionsPerCategory; questionIndex++) {
+      doubleJeopardyAnswers.push(
+          generateQuestionData(
+              categoryName,
+              questionIndex,
+              doubleJeopardyPointBase * (questionIndex + 1) // Increment points based on the question number
+          )
+      );
+    }
   }
 
   console.log('Test Single Jeopardy Answers:', singleJeopardyAnswers);

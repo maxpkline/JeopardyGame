@@ -416,3 +416,29 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+.overall-game-stats{
+    letter-spacing: 0.1em;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: lighter;
+    font-family: "Jeopardy Font", serif;
+    text-shadow: black 4px 4px 4px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-color: #5d69e6;
+}
+
+.overall-game-stats-title{
+    font-size: 2rem;
+    width: 100%;
+    padding:20px;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    font-family: "Jeopardy Font", serif;
+    text-shadow: black 4px 4px 4px;
+    background-color: #9be65d;
+    margin-top: 20px;
+}
