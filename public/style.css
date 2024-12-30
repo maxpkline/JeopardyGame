@@ -332,9 +332,19 @@ body {
     text-shadow: black 4px 4px 4px;
 }
 
-#final-score-display{
-    width: 60%;
-    margin: 0 auto;
+.final-score-restart-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Adds space between the elements */
+    width: 100%;
+    margin: 20px 0;
+}
+
+#final-score-display {
+    width: auto; /* Change from 25% to auto to fit content */
+    margin: 0; /* Remove auto margins */
     font-size: 3rem;
     text-shadow: black 4px 4px 4px;
     color: #ffffff;
@@ -345,8 +355,7 @@ body {
 }
 
 .restart-game-button {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 0; /* Remove top and bottom margins */
     padding: 10px 20px;
     font-size: 2rem;
     border: none;
@@ -362,25 +371,37 @@ body {
     text-shadow: black 4px 4px 4px;
 }
 
-#page-divider {
-    width: 100%;
-    height: 10%;
-    background-color: #ffffff;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 .category-stats{
+    width: 50%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .category-stat{
+    letter-spacing: 0.1em;
+    width: 100%;
     font-size: 1.5rem;
+    font-weight: lighter;
     font-family: "Jeopardy Font", serif;
     text-shadow: black 4px 4px 4px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-color: #5d69e6;
+}
+
+.category-stat-title{
+    font-size: 2rem;
+    width: 100%;
+    padding:20px;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    font-family: "Jeopardy Font", serif;
+    text-shadow: black 4px 4px 4px;
+    background-color: #9be65d;
+    margin-top: 20px;
 }

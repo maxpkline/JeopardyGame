@@ -87,6 +87,67 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
     return stats;
   }, {});
 
+
+  // Create container for category statistics
+  const statsContainer = document.createElement('div');
+  statsContainer.className = 'category-stats';
+
+  // Add overall statistics
+  const overallStats = document.createElement('div');
+  const overallStatsTitle = document.createElement('h2');
+  overallStatsTitle.textContent = 'Overall Performance';
+  overallStatsTitle.className = 'category-stat-title';
+  overallStats.className = 'category-stat';
+
+  overallStats.innerHTML = `
+    <p>Questions Answered: ${totalQuestionsAnswered}</p>
+    <p>Correct Answers: ${correctAnswers}</p>
+    <p>Accuracy: ${Math.round((correctAnswers / totalQuestionsAnswered) * 100)}%</p>
+    <p>Total Points: ${totalPointsEarned}</p>
+  `;
+  statsContainer.appendChild(overallStatsTitle);
+  statsContainer.appendChild(overallStats);
+
+  // Adding individual category statistics
+  Object.entries(categoryStats).forEach(([category, stats]) => {
+    const categoryDiv = document.createElement('div');
+    const categoryTitle = document.createElement('h2');
+    categoryTitle.className = 'category-stat-title';
+    categoryTitle.textContent = category;
+    categoryDiv.className = 'category-stat';
+
+    // Calculate accuracy percentage
+    const accuracy = Math.round((stats.correct / stats.total) * 100);
+
+    categoryDiv.innerHTML = `
+      <p>Correct: ${stats.correct}/${stats.total}</p>
+      <p>Accuracy: ${accuracy}%</p>
+      <p>Points Earned: ${stats.points}</p>
+    `;
+
+    // Add color coding based on performance
+    if (accuracy >= 80) {
+      categoryTitle.style.backgroundColor = '#00ff00'; // Bright green for excellent
+    } else if (accuracy >= 60) {
+      categoryTitle.style.backgroundColor = '#ffff00'; // Yellow for good
+    } else {
+      categoryTitle.style.backgroundColor = '#ff6b6b'; // Light red for needs improvement
+    }
+
+    statsContainer.appendChild(categoryTitle);
+    statsContainer.appendChild(categoryDiv);
+  });
+
+  // Add the stats container to the final screen
+  const finalScreen = document.getElementById('final-screen');
+
+  // Clear any existing stats first
+  const existingStats = finalScreen.querySelector('.category-stats');
+  if (existingStats) {
+    existingStats.remove();
+  }
+
+  finalScreen.appendChild(statsContainer);
   // Use data to display detailed statistics on final screen
   console.log('Game Statistics:', {
     totalQuestionsAnswered,
@@ -217,6 +278,8 @@ function setupGameBoard(data, roundMultiplier) {
       clue.style.backgroundColor = 'green';
       score += pointValue;
     } else {
+      // startDoubleJeopardy();
+      // showFinalScore(singleJeopardyAnswers, doubleJeopardyResults);
       feedback.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
       feedback.style.color = 'red';
       clue.style.backgroundColor = 'red';
