@@ -93,6 +93,7 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   // Create container for category statistics
   const overallStatsContainer = document.createElement('div');
     overallStatsContainer.className = 'category-stats';
+    overallStatsContainer.style.width = '65%';
   const statsContainer = document.createElement('div');
   statsContainer.className = 'category-stats';
 
@@ -103,12 +104,41 @@ function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   overallStatsTitle.className = 'overall-game-stats-title';
   overallStats.className = 'overall-game-stats';
 
+  // Calculate most/least accurate and points-earning categories
+  const mostAccurateCategory = Object.entries(categoryStats).reduce(
+      (max, [category, stats]) => (stats.correct / stats.total > max.accuracy ? { category, accuracy: stats.correct / stats.total } : max),
+      { category: null, accuracy: 0 }
+  );
+
+  const leastAccurateCategory = Object.entries(categoryStats).reduce(
+      (min, [category, stats]) => (stats.correct / stats.total < min.accuracy ? { category, accuracy: stats.correct / stats.total } : min),
+      { category: null, accuracy: Infinity }
+  );
+
+  const topPointsCategory = Object.entries(categoryStats).reduce(
+      (max, [category, stats]) => (stats.points > max.points ? { category, points: stats.points } : max),
+      { category: null, points: 0 }
+  );
+
+  const leastPointsCategory = Object.entries(categoryStats).reduce(
+      (min, [category, stats]) => (stats.points < min.points ? { category, points: stats.points } : min),
+      { category: null, points: Infinity }
+  );
+
   overallStats.innerHTML = `
+  <div class="overall-stats-column">
     <p>Questions Answered: ${totalQuestionsAnswered}</p>
     <p>Correct Answers: ${correctAnswers}</p>
     <p>Accuracy: ${Math.round((correctAnswers / totalQuestionsAnswered) * 100)}%</p>
     <p>Total Points: ${totalPointsEarned}</p>
-  `;
+  </div>
+  <div class="overall-stats-column">
+    <p>Most Accurate Category: ${mostAccurateCategory.category || 'N/A'} (${Math.round(mostAccurateCategory.accuracy * 100)}%)</p>
+    <p>Least Accurate Category: ${leastAccurateCategory.category || 'N/A'} (${Math.round(leastAccurateCategory.accuracy * 100)}%)</p>
+    <p>Top Points-Earning Category: ${topPointsCategory.category || 'N/A'} ($${topPointsCategory.points})</p>
+    <p>Least Points-Earning Category: ${leastPointsCategory.category || 'N/A'} ($${leastPointsCategory.points})</p>
+  </div>
+`;
     overallStatsContainer.appendChild(overallStatsTitle);
     overallStatsContainer.appendChild(overallStats);
 
@@ -419,6 +449,8 @@ function setupGameBoard(data, roundMultiplier) {
 
       questionText.textContent = question;
       showModal();
+      answerInput.value = '';
+      answerInput.focus();
 
       const handleEnterKey = (event) => {
         if (event.key === 'Enter') {

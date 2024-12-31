@@ -327,6 +327,7 @@ body {
 }
 
 #game-over-title{
+    margin-top: 25px;
     font-size: 5rem;
     font-family: "Jeopardy Font", serif;
     text-shadow: black 4px 4px 4px;
@@ -339,7 +340,7 @@ body {
     justify-content: center;
     gap: 20px; /* Adds space between the elements */
     width: 100%;
-    margin: 20px 0;
+    margin: 20px 0 50px;
 }
 
 #final-score-display {
@@ -376,6 +377,7 @@ body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    column-count: 2;
     align-items: center;
     justify-content: center;
 }
@@ -411,6 +413,7 @@ body {
     width: 50%;
     margin: 0 auto;
     margin-bottom: 20px;
+    margin-top: 20px;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
@@ -429,6 +432,17 @@ body {
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     background-color: #5d69e6;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.overall-stats-column {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px;
 }
 
 .overall-game-stats-title{
