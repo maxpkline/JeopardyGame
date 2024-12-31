@@ -229,14 +229,15 @@ body {
     text-shadow: black 4px 4px 4px;
     padding: 1vw;
     letter-spacing: 0.02em;
-    background-color: #010a77;
+    background-image: url("ripple-blue-img.png");
     border-radius: 15px;
+    color: #dab94b;
     transition: background-color 0.3s;
     flex: 1; /* Allows clues to scale dynamically within each column */
 }
 
 .clue:hover {
-    background-color: #0073e6;
+    background-image: url("lighterbuttonimage.png");
     /*font-size: 2.6vw;*/
     /*border: #b3ac25 8px ridge;*/
 }

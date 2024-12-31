@@ -46,6 +46,7 @@ function getSelectedCategories(allCategories) {
 function startGame() {
   document.getElementById('start-menu').style.display = 'none';
   document.getElementById('single-round').style.display = 'block';
+  document.body.style.backgroundImage = 'url("public/singleroundtest1.png")';
   setupGameBoard(triviaData, 1); // Pass round 1 for normal point values
 }
 
@@ -339,6 +340,8 @@ function setupGameBoard(data, roundMultiplier) {
       document.getElementById('feedback') :
       document.querySelector(`${currentRoundSelector} .feedback`);
 
+  const pointValues = [200, 400, 600, 800, 1000]; // Static point values for each question
+
   selectedCategories.forEach((categoryName, categoryIndex) => {
     const questions = data[categoryName];
 
@@ -347,14 +350,14 @@ function setupGameBoard(data, roundMultiplier) {
       return;
     }
 
-    const randomQuestions = getRandomQuestions(questions, 5);
+    const randomQuestions = getRandomQuestions(questions, pointValues.length);
 
     categoryElements[categoryIndex].textContent = categoryName;
     randomQuestions.forEach((question, i) => {
-      const clue = clueElements[categoryIndex * 5 + i];
+      const clue = clueElements[categoryIndex * pointValues.length + i];
       clue.setAttribute('data-question', question.question);
       clue.setAttribute('data-answer', question.answer.toLowerCase());
-      clue.textContent = question.value * roundMultiplier;
+      clue.textContent = `$${pointValues[i] * roundMultiplier}`;
     });
   });
 
@@ -409,15 +412,15 @@ function setupGameBoard(data, roundMultiplier) {
       feedback.textContent = 'Correct!';
       feedback.style.color = 'green';
       clue.style.backgroundColor = 'green';
-      score += pointValue;
+      score += parseInt(clue.textContent.replace('$', ''), 10);
     } else {
-      startDoubleJeopardy();
-      fillTestAnswers();
-      showFinalScore(singleJeopardyAnswers, doubleJeopardyAnswers);
+      // startDoubleJeopardy();
+      // fillTestAnswers();
+      // showFinalScore(singleJeopardyAnswers, doubleJeopardyAnswers);
       feedback.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
       feedback.style.color = 'red';
       clue.style.backgroundColor = 'red';
-      score -= pointValue;
+      score -= parseInt(clue.textContent.replace('$', ''), 10);
     }
 
     clue.classList.add('answered');
