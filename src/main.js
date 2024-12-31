@@ -42,21 +42,49 @@ function getSelectedCategories(allCategories) {
   return selectedCategories;
 }
 
+// Function to show the transition screen
+function showTransitions(round) {
+  // Object to map rounds to their respective image URLs
+  const roundPhotos = {
+    1: "public/singleJeopardyTransitionScreen.jpg",
+    2: "public/doubleJeopardyTransition.jpg",
+    3: "public/doubleJeopardyTransition.jpg"
+  };
+  const photoURL = roundPhotos[round] || "default.jpg";
+
+  // Find the transition screen and image elements
+  const transitionScreen = document.getElementById("transition-screen");
+  const transitionImage = transitionScreen.querySelector("img");
+  transitionImage.src = photoURL;
+  transitionScreen.classList.add("visible");
+
+  // Remove the 'visible' class after the duration
+  setTimeout(() => {
+    transitionScreen.classList.remove("visible");
+  }, 3000); // Adjust the duration if needed
+}
+
 // Function to start the game
 function startGame() {
-  document.getElementById('start-menu').style.display = 'none';
-  document.getElementById('single-round').style.display = 'block';
-  document.body.style.backgroundImage = 'url("public/singleroundtest1.png")';
-  setupGameBoard(triviaData, 1); // Pass round 1 for normal point values
+  showTransitions(1);
+  setTimeout(() => {
+    document.getElementById('start-menu').style.display = 'none';
+    document.getElementById('single-round').style.display = 'block';
+    document.body.style.backgroundImage = 'url("public/galaxytypeimage.png")';
+    setupGameBoard(triviaData, 1);
+  }, 3000);
 }
 
 // Function to start Double Jeopardy
 function startDoubleJeopardy() {
-  round = 2;
-  document.getElementById('single-round').style.display = 'none';
-  document.getElementById('double-round').style.display = 'block';
-  setupGameBoard(triviaData, 2); // Pass round 2 for double point values
-  console.log('Double Jeopardy started, round:', round);
+  showTransitions(2);
+  setTimeout(() => {
+    round = 2;
+    document.getElementById('single-round').style.display = 'none';
+    document.getElementById('double-round').style.display = 'block';
+    document.body.style.backgroundImage = 'url("public/jeopardybackground.png")';
+    setupGameBoard(triviaData, 2); // Pass round 2 for double point values
+  }, 3000);
 }
 
 
@@ -395,9 +423,9 @@ function setupGameBoard(data, roundMultiplier) {
       question: clue.getAttribute('data-question'),
       correctAnswer: correctAnswer,
       playerAnswer: playerAnswer,
-      pointValue: pointValue,
+      pointValue: parseInt(clue.textContent.replace('$', ''), 10),
       isCorrect: isCorrect,
-      pointsEarned: isCorrect ? pointValue : -pointValue
+      pointsEarned: isCorrect ? parseInt(clue.textContent.replace('$', ''), 10) : -parseInt(clue.textContent.replace('$', ''), 10)
     };
 
     // Store the result in the appropriate array
@@ -411,7 +439,7 @@ function setupGameBoard(data, roundMultiplier) {
     if (isCorrect) {
       feedback.textContent = 'Correct!';
       feedback.style.color = 'green';
-      clue.style.backgroundColor = 'green';
+      clue.style.backgroundImage = 'url("public/jeopardyCorrectClue.png")';
       score += parseInt(clue.textContent.replace('$', ''), 10);
     } else {
       // startDoubleJeopardy();
@@ -419,7 +447,7 @@ function setupGameBoard(data, roundMultiplier) {
       // showFinalScore(singleJeopardyAnswers, doubleJeopardyAnswers);
       feedback.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
       feedback.style.color = 'red';
-      clue.style.backgroundColor = 'red';
+      clue.style.backgroundImage = 'url("public/jeopardyIncorrectClue.png")';
       score -= parseInt(clue.textContent.replace('$', ''), 10);
     }
 
