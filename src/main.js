@@ -92,6 +92,7 @@ function startDoubleJeopardy() {
 function showFinalScore(singleJeopardyResults, doubleJeopardyResults) {
   document.getElementById('double-round').style.display = 'none';
   document.getElementById('final-screen').style.display = 'block';
+  document.body.style.backgroundImage = 'url("public/ripple-blue-img.png")';
 
   const allResults = [...singleJeopardyResults, ...doubleJeopardyResults];
 
