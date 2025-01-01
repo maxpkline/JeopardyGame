@@ -230,32 +230,26 @@
     {"question": "Which language was developed by Sun Microsystems in 1995 and is widely used for building enterprise-level applications?", "answer": "java", "value": 300},
     {"question": "What language is primarily used for web development, often alongside HTML and CSS?", "answer": "javascript", "value": 400},
     {"question": "What programming language is known for being used in system programming and embedded systems, and is commonly associated with low-level operations?", "answer": "c", "value": 500},
-
     {"question": "What is the term for a step-by-step procedure for solving a problem in computer science?", "answer": "algorithm", "value": 200},
     {"question": "In which data structure are elements added at one end and removed from the other end?", "answer": "queue", "value": 300},
     {"question": "Which algorithm is used to find the shortest path between two nodes in a graph?", "answer": "dijkstra's algorithm", "value": 400},
     {"question": "What is the name of the data structure that uses a Last In, First Out (LIFO) approach?", "answer": "stack", "value": 500},
-
     {"question": "Who is considered the 'father of the computer' and designed the Analytical Engine?", "answer": "charles babbage", "value": 200},
     {"question": "What pioneering woman is often credited as the first computer programmer for her work on the Analytical Engine?", "answer": "ada lovelace", "value": 300},
     {"question": "What was the name of the first commercially available general-purpose electronic computer?", "answer": "univac", "value": 400},
     {"question": "Which company developed the first version of the UNIX operating system in the 1970s?", "answer": "bell labs", "value": 500},
-
     {"question": "What operating system is known for its use in smartphones and tablets, developed by Google?", "answer": "android", "value": 200},
     {"question": "Which operating system was created by Linus Torvalds in 1991 and is known for being open-source?", "answer": "linux", "value": 300},
     {"question": "What is the name of Apple's operating system for its Macintosh computers?", "answer": "macos", "value": 400},
     {"question": "What operating system runs on the majority of the world’s servers and is known for its stability and security?", "answer": "linux", "value": 500},
-
     {"question": "What is the term for an attempt to gain unauthorized access to a computer system to steal information?", "answer": "hacking", "value": 200},
     {"question": "What kind of malware encrypts a victim’s data and demands payment to restore access?", "answer": "ransomware", "value": 300},
     {"question": "What does 'DDoS' stand for in the context of a cyberattack?", "answer": "distributed denial of service", "value": 400},
     {"question": "What technique, commonly used in cybersecurity, involves hiding messages or data within other non-secret data or media?", "answer": "steganography", "value": 500},
-
     {"question": "What does 'SQL' stand for in the context of databases?", "answer": "structured query language", "value": 200},
     {"question": "In a relational database, what is a unique identifier for a record called?", "answer": "primary key", "value": 300},
     {"question": "Which NoSQL database is known for its flexibility and is often used in web applications?", "answer": "mongodb", "value": 400},
     {"question": "What database term refers to the process of organizing data to minimize redundancy?", "answer": "normalization", "value": 500},
-
     {"question": "What branch of computer science involves creating machines that can perform tasks that require human intelligence?", "answer": "artificial intelligence (ai)", "value": 200},
     {"question": "What AI technique involves machines learning from large amounts of data and improving performance over time?", "answer": "machine learning", "value": 300},
     {"question": "Which AI framework, developed by Google, is widely used for machine learning and deep learning applications?", "answer": "tensorflow", "value": 400},

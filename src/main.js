@@ -1,9 +1,10 @@
 let triviaData;
 let correctAnswer = ''; // Store the correct answer for the current question
-let score = 0; // Initialize the player's score
+let score = 0;
 let round = 1;
 let singleJeopardyAnswers = [];
 let doubleJeopardyAnswers = [];
+let usedQuestions = new Set(); // Keep track of used questions
 
 document.addEventListener('DOMContentLoaded', () => {
   updateScoreDisplay();
@@ -370,6 +371,7 @@ function setupGameBoard(data, roundMultiplier) {
       document.querySelector(`${currentRoundSelector} .feedback`);
 
   const pointValues = [200, 400, 600, 800, 1000]; // Static point values for each question
+  let isClueActive = false; // Track if a clue is currently active
 
   selectedCategories.forEach((categoryName, categoryIndex) => {
     const questions = data[categoryName];
@@ -379,7 +381,14 @@ function setupGameBoard(data, roundMultiplier) {
       return;
     }
 
-    const randomQuestions = getRandomQuestions(questions, pointValues.length);
+    // Filter out previously used questions for this category
+    const availableQuestions = questions.filter(q => !usedQuestions.has(q.question));
+    const randomQuestions = getRandomQuestions(availableQuestions, pointValues.length);
+
+    // Track the used questions
+    randomQuestions.forEach(question => {
+      usedQuestions.add(question.question);
+    });
 
     categoryElements[categoryIndex].textContent = categoryName;
     randomQuestions.forEach((question, i) => {
@@ -393,11 +402,23 @@ function setupGameBoard(data, roundMultiplier) {
   // Function to show modal with fade-in effect
   const showModal = () => {
     questionModal.classList.add('show');
+    isClueActive = true;
+    // Disable all clue buttons while modal is open
+    clueElements.forEach(clue => {
+      clue.style.pointerEvents = 'none';
+    });
   };
 
   // Function to hide modal with fade-out effect
   const hideModal = () => {
     questionModal.classList.remove('show');
+    isClueActive = false;
+    // Re-enable unanswered clue buttons after modal closes
+    clueElements.forEach(clue => {
+      if (!clue.classList.contains('answered')) {
+        clue.style.pointerEvents = 'auto';
+      }
+    });
   };
 
   // Initialize arrays to store detailed answer tracking
@@ -453,6 +474,7 @@ function setupGameBoard(data, roundMultiplier) {
     }
 
     clue.classList.add('answered');
+    clue.style.pointerEvents = 'none';
     updateScoreDisplay();
 
     setTimeout(() => {
@@ -472,7 +494,9 @@ function setupGameBoard(data, roundMultiplier) {
 
   // Update clueElements setup to include index
   clueElements.forEach((clue, index) => {
-    clue.dataset.index = index;  // Add index for category reference
+    clue.dataset.index = index;  // index for category reference
+    clue.style.pointerEvents = 'auto';
+
     clue.addEventListener('click', () => {
       if (clue.classList.contains('answered')) return;
 
@@ -604,6 +628,10 @@ function allCluesAnswered() {
 
 // Function to get random questions from a category
 function getRandomQuestions(questions, count) {
+  if (questions.length < count) {
+    console.warn(`Not enough unique questions available. Needed ${count}, but only had ${questions.length}`);
+    return questions; // Return all available questions
+  }
   const shuffled = questions.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
